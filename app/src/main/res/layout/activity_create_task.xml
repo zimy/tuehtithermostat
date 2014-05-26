@@ -14,13 +14,13 @@
         <RelativeLayout
             style="@style/RelLayout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">>
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/activity_title_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Adding new task" />
+                android:text="@string/add_task" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="Mode not selected. Chose one to be able to add task to schedule" />
+                android:text="@string/mode_not_selected_error" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -46,15 +46,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="Start time" />
+                android:text="@string/start_time" />
 
             <TextView
                 android:id="@+id/time_chosen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:text="Set this to NOW" />
+                android:text="@string/time_stub" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -67,15 +66,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="Start day" />
+                android:text="@string/day" />
 
             <TextView
                 android:id="@+id/day_chosen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:text="Set this to TODAY" />
+                android:text="@string/day_stub" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -88,15 +86,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:text="Mode" />
+                android:text="@string/mode" />
 
             <TextView
                 android:id="@+id/mode_chosen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:text="Tap here to select mode" />
+                android:text="@string/mode_stub" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -111,13 +108,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add" />
+            android:text="@string/button_add" />
 
         <Button
             android:id="@+id/add_new_task_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="@string/button_cancel" />
     </LinearLayout>
 </RelativeLayout>

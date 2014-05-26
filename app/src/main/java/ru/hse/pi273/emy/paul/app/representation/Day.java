@@ -8,7 +8,6 @@ package ru.hse.pi273.emy.paul.app.representation;
  */
 public enum Day {
     MONDAY,
-    TUESDAY,
     WEDNESDAY,
     THURSDAY,
     FRIDAY,
