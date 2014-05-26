@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Paul</string>
+    <string name="app_name">HTI Thermostat</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_week_view">WeekViewActivity</string>
-    <string name="title_activity_create_task">CreateTaskActivity</string>
-    <string name="day_wftday">WTFday</string>
+    <string name="title_activity_week_view">Week schedule</string>
+    <string name="title_activity_create_task">Add task</string>
+    <string name="add_task">Adding new task</string>
+    <string name="day_0day">WTFday</string>
     <string name="day_sunday">Sunday</string>
     <string name="day_monday">Monday</string>
     <string name="day_tuesday">Tuesday</string>
@@ -14,7 +15,7 @@
     <string name="day_thursday">Thursday</string>
     <string name="day_friday">Friday</string>
     <string name="day_saturday">Saturday</string>
-    <string name="add_task">Adding new task</string>
+    <string name="day_dialog_title">Tap to chose day</string>
     <string name="mode_not_selected_error">Mode not selected. Chose one to be able to add task to schedule</string>
     <string name="start_time">Start time</string>
     <string name="time_stub">Set this to NOW</string>
@@ -24,4 +25,5 @@
     <string name="mode_stub">Tap here to select mode</string>
     <string name="button_add">Add</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_chose">Chose</string>
 </resources>

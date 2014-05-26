@@ -154,10 +154,10 @@ public class CreateTaskActivity extends Activity {
         }
         if (id == 2) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            adb.setTitle(R.string.title_activity_create_task);
+            adb.setTitle(R.string.day_dialog_title);
             adb.setSingleChoiceItems(days, day, myClickListener);
 
-            adb.setPositiveButton(R.string.title_activity_create_task, myClickListener);
+            adb.setPositiveButton(R.string.button_chose, myClickListener);
             return adb.create();
         }
         return super.onCreateDialog(id);
