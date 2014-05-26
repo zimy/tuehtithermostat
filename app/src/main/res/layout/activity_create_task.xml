@@ -104,17 +104,18 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_add" />
-
-        <Button
             android:id="@+id/add_new_task_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/button_cancel" />
+            android:enabled="false"
+            android:text="@string/button_add" />
+
+        <!--<Button-->
+        <!--android:id="@+id/cancel_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="@string/button_cancel" />-->
     </LinearLayout>
 </RelativeLayout>

@@ -16,7 +16,9 @@
     <string name="day_friday">Friday</string>
     <string name="day_saturday">Saturday</string>
     <string name="day_dialog_title">Tap to chose day</string>
-    <string name="mode_not_selected_error">Mode not selected. Chose one to be able to add task to schedule</string>
+    <string name="mode_dialog_title">Tap to chose mode</string>
+    <string name="mode_day">Day</string>
+    <string name="mode_night">Night</string>
     <string name="start_time">Start time</string>
     <string name="time_stub">Set this to NOW</string>
     <string name="day">Start day</string>
@@ -26,4 +28,16 @@
     <string name="button_add">Add</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_chose">Chose</string>
+
+
+    <string name="mode_not_selected_error">Mode not selected. Chose one to be able to add task to schedule</string>
+    <string name="limits_ok">Now you can add task</string>
+    <string name="lim_d_today">Daily limit of switches to DAY mode hit. Select another day or NIGHT mode</string>
+    <string name="lim_n_today">Daily limit of switches to NIGHT mode hit. Select another day or DAY mode</string>
+    <string name="lim_today">The daily limit of switches hit. Select another day</string>
+    <string name="lim_d">Limit of switches to DAY mode hit. You are able to select only NIGHT mode</string>
+    <string name="lim_n">Limit of switches to NIGHT mode hit. You are able to select only DAY mode</string>
+    <string name="lim">The limit of switches hit. Try deleting some switches</string>
+    <string name="inner_error">Inner architectural error. It is not normal to see it here</string>
+
 </resources>

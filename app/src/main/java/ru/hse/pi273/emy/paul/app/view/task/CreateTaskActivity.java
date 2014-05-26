@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,9 +20,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ru.hse.pi273.emy.paul.app.R;
+import ru.hse.pi273.emy.paul.app.engine.Engine;
+import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
+import ru.hse.pi273.emy.paul.app.engine.ProbeStatus;
 
 public class CreateTaskActivity extends Activity {
-
+    Engine engine = PersistentEngine.getInstance();
     int Hours, Minutes;
     TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -31,6 +35,7 @@ public class CreateTaskActivity extends Activity {
             timechosen.setText("" + Hours + ":" + Minutes);
         }
     };
+
     int day;
     int mode;
     String days[];
@@ -40,14 +45,118 @@ public class CreateTaskActivity extends Activity {
             if (which == Dialog.BUTTON_POSITIVE) {
                 // выводим в лог позицию выбранного элемента
                 day = lv.getCheckedItemPosition();
-                Log.d("Thermostat", "pos = " + day);
                 TextView dayChosen = (TextView) findViewById(R.id.day_chosen);
                 dayChosen.setText(days[day]);
-            } else
-                // выводим в лог позицию нажатого элемента
-                Log.d("Thermostat", "which = " + which);
+                probe();
+            }
         }
     };
+    String modes[];
+    DialogInterface.OnClickListener myAnotherClickListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int which) {
+            ListView lv = ((AlertDialog) dialog).getListView();
+            if (which == Dialog.BUTTON_POSITIVE) {
+                // выводим в лог позицию выбранного элемента
+                mode = lv.getCheckedItemPosition();
+                TextView dayChosen = (TextView) findViewById(R.id.mode_chosen);
+                dayChosen.setText(modes[mode]);
+                probe();
+            }
+        }
+    };
+
+    void probe() {
+        TextView tw = (TextView) findViewById(R.id.task_adding_status_message);
+        ProbeStatus result = engine.probe(day);
+        boolean btn = false;
+        int msg = R.string.inner_error;
+        switch (result) {
+            case OK:
+                switch (mode) {
+                    case 0:
+                    case 1:
+                        btn = true;
+                        msg = R.string.limits_ok;
+                        break;
+                    case 2:
+                        btn = false;
+                        msg = R.string.mode_not_selected_error;
+                        break;
+                }
+                break;
+            case LIM_D_TODAY:
+                switch (mode) {
+                    case 0:
+                        btn = false;
+                        msg = R.string.lim_d_today;
+                        break;
+                    case 1:
+                        btn = true;
+                        msg = R.string.limits_ok;
+                        break;
+                    case 2:
+                        btn = false;
+                        msg = R.string.mode_not_selected_error;
+                        break;
+                }
+                break;
+            case LIM_N_TODAY:
+                switch (mode) {
+                    case 0:
+                        btn = true;
+                        msg = R.string.limits_ok;
+                        break;
+                    case 1:
+                        btn = false;
+                        msg = R.string.lim_n_today;
+                        break;
+                    case 2:
+                        btn = false;
+                        msg = R.string.mode_not_selected_error;
+                        break;
+                }
+                break;
+            case LIM_TODAY:
+                btn = false;
+                msg = R.string.lim_today;
+                break;
+            case LIM_D:
+                switch (mode) {
+                    case 0:
+                    case 2:
+                        btn = false;
+                        msg = R.string.lim_d;
+                        break;
+                    case 1:
+                        btn = true;
+                        msg = R.string.limits_ok;
+                        break;
+                }
+                break;
+            case LIM_N:
+                switch (mode) {
+                    case 0:
+                        btn = true;
+                        msg = R.string.limits_ok;
+                        break;
+                    case 1:
+                    case 2:
+                        btn = false;
+                        msg = R.string.lim_n;
+                        break;
+                }
+                break;
+            default:
+                btn = false;
+                msg = R.string.lim;
+        }
+        if (msg == R.string.inner_error) {
+            throw new AssertionError("Error at resolving current state. See CreateTaskActivity.probe() source code.");
+        }
+        Button b = (Button) findViewById(R.id.add_new_task_button);
+        b.setEnabled(btn);
+        tw.setText(getResources().getString(msg));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +170,18 @@ public class CreateTaskActivity extends Activity {
                 getResources().getString(R.string.day_thursday),
                 getResources().getString(R.string.day_friday),
                 getResources().getString(R.string.day_saturday),
-
         };
+        modes = new String[]{
+                getResources().getString(R.string.mode_day),
+                getResources().getString(R.string.mode_night),
+        };
+        Button b = (Button) findViewById(R.id.add_new_task_button);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -125,6 +244,12 @@ public class CreateTaskActivity extends Activity {
         });
         TextView modeChosen = (TextView) findViewById(R.id.mode_chosen);
         modeChosen.setText("" + (mode == 2 ? ("Tap here to select mode") : (mode == 0 ? "Day" : "Night")));
+        modeChosen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog(3);
+            }
+        });
     }
 
     @Override
@@ -158,6 +283,14 @@ public class CreateTaskActivity extends Activity {
             adb.setSingleChoiceItems(days, day, myClickListener);
 
             adb.setPositiveButton(R.string.button_chose, myClickListener);
+            return adb.create();
+        }
+        if (id == 3) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            adb.setTitle(R.string.mode_dialog_title);
+            adb.setSingleChoiceItems(modes, day, myAnotherClickListener);
+
+            adb.setPositiveButton(R.string.button_chose, myAnotherClickListener);
             return adb.create();
         }
         return super.onCreateDialog(id);
