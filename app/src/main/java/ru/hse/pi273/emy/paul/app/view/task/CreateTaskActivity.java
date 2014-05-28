@@ -1,6 +1,5 @@
 package ru.hse.pi273.emy.paul.app.view.task;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -19,23 +18,34 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.Date;
 
+import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
 import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
 import ru.hse.pi273.emy.paul.app.engine.ProbeStatus;
+import ru.hse.pi273.emy.paul.app.representation.Task;
 
-public class CreateTaskActivity extends Activity {
+public class CreateTaskActivity extends RoboActionBarActivity {
     Engine engine = PersistentEngine.getInstance();
     int Hours, Minutes;
     TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             Hours = hourOfDay;
             Minutes = minute;
-            TextView timechosen = (TextView) findViewById(R.id.time_chosen);
-            timechosen.setText("" + Hours + ":" + Minutes);
+            timeChosen.setText("" + Hours + ":" + Minutes);
         }
     };
-
+    @InjectView(R.id.time_chosen)
+    TextView timeChosen;
+    @InjectView(R.id.day_chosen)
+    TextView dayChosen;
+    @InjectView(R.id.mode_chosen)
+    TextView modeChosen;
+    @InjectView(R.id.task_adding_status_message)
+    TextView helperText;
+    @InjectView(R.id.add_new_task_button)
+    Button addingButton;
     int day;
     int mode;
     String days[];
@@ -45,7 +55,6 @@ public class CreateTaskActivity extends Activity {
             if (which == Dialog.BUTTON_POSITIVE) {
                 // выводим в лог позицию выбранного элемента
                 day = lv.getCheckedItemPosition();
-                TextView dayChosen = (TextView) findViewById(R.id.day_chosen);
                 dayChosen.setText(days[day]);
                 probe();
             }
@@ -58,15 +67,13 @@ public class CreateTaskActivity extends Activity {
             if (which == Dialog.BUTTON_POSITIVE) {
                 // выводим в лог позицию выбранного элемента
                 mode = lv.getCheckedItemPosition();
-                TextView dayChosen = (TextView) findViewById(R.id.mode_chosen);
-                dayChosen.setText(modes[mode]);
+                modeChosen.setText(modes[mode]);
                 probe();
             }
         }
     };
 
     void probe() {
-        TextView tw = (TextView) findViewById(R.id.task_adding_status_message);
         ProbeStatus result = engine.probe(day);
         boolean btn = false;
         int msg = R.string.inner_error;
@@ -153,9 +160,8 @@ public class CreateTaskActivity extends Activity {
         if (msg == R.string.inner_error) {
             throw new AssertionError("Error at resolving current state. See CreateTaskActivity.probe() source code.");
         }
-        Button b = (Button) findViewById(R.id.add_new_task_button);
-        b.setEnabled(btn);
-        tw.setText(getResources().getString(msg));
+        addingButton.setEnabled(btn);
+        helperText.setText(getResources().getString(msg));
     }
 
     @Override
@@ -175,10 +181,10 @@ public class CreateTaskActivity extends Activity {
                 getResources().getString(R.string.mode_day),
                 getResources().getString(R.string.mode_night),
         };
-        Button b = (Button) findViewById(R.id.add_new_task_button);
-        b.setOnClickListener(new View.OnClickListener() {
+        addingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                engine.add(new Task(day, mode, Hours, Minutes));
                 finish();
             }
         });
@@ -225,16 +231,13 @@ public class CreateTaskActivity extends Activity {
             }
             mode = 2;
         }
-
-        TextView timechosen = (TextView) findViewById(R.id.time_chosen);
-        timechosen.setText("" + Hours + ":" + Minutes);
-        timechosen.setOnClickListener(new View.OnClickListener() {
+        timeChosen.setText("" + Hours + ":" + Minutes); //TODO this stub produces trash like that 1:0
+        timeChosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog(1);
             }
         });
-        TextView dayChosen = (TextView) findViewById(R.id.day_chosen);
         dayChosen.setText(days[day]);
         dayChosen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,7 +245,6 @@ public class CreateTaskActivity extends Activity {
                 showDialog(2);
             }
         });
-        TextView modeChosen = (TextView) findViewById(R.id.mode_chosen);
         modeChosen.setText("" + (mode == 2 ? ("Tap here to select mode") : (mode == 0 ? "Day" : "Night")));
         modeChosen.setOnClickListener(new View.OnClickListener() {
             @Override

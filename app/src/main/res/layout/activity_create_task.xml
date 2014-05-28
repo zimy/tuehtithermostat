@@ -11,17 +11,6 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <RelativeLayout
-            style="@style/RelLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/activity_title_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/add_task" />
-        </RelativeLayout>
 
         <RelativeLayout
             style="@style/RelLayout"

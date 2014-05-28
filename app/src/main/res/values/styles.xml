@@ -1,8 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <item name="android:windowNoTitle">true</item>
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light"></style>
 
     <style name="RelLayout">
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>

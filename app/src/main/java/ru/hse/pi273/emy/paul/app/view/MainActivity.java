@@ -1,17 +1,17 @@
 package ru.hse.pi273.emy.paul.app.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import ru.hse.pi273.emy.paul.app.R;
-import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
+import ru.hse.pi273.emy.paul.app.view.week.WeekViewActivity;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        startActivity(new Intent(this, CreateTaskActivity.class));
+        startActivity(new Intent(this, WeekViewActivity.class));
     }
 }

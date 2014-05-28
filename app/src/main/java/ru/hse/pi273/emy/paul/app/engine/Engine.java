@@ -1,5 +1,7 @@
 package ru.hse.pi273.emy.paul.app.engine;
 
+import ru.hse.pi273.emy.paul.app.representation.Task;
+
 /**
  * Higher School of Economics
  * Computer Science Faculty
@@ -9,4 +11,5 @@ package ru.hse.pi273.emy.paul.app.engine;
 public interface Engine {
     public ProbeStatus probe(int day);
 
+    void add(Task task);
 }
