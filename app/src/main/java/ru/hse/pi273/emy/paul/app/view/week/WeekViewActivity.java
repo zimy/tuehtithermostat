@@ -11,14 +11,14 @@ import android.widget.ListView;
 
 import com.google.inject.Inject;
 
-import roboguice.activity.RoboActivity;
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
 import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
-public class WeekViewActivity extends RoboActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class WeekViewActivity extends RoboActionBarActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     @Inject
     Engine engine = new PersistentEngine();
     @InjectView(R.id.listView)

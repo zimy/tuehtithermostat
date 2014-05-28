@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import java.util.Calendar;
 import java.util.Date;
 
-import roboguice.activity.RoboActivity;
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
@@ -27,7 +27,7 @@ import ru.hse.pi273.emy.paul.app.representation.ConcreteTaskStringsKeeper;
 import ru.hse.pi273.emy.paul.app.representation.Task;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
-public class CreateTaskActivity extends RoboActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
+public class CreateTaskActivity extends RoboActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
     @Inject
     Engine engine;
     @Inject
