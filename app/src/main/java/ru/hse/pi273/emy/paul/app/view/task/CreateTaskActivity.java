@@ -6,36 +6,32 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.inject.Inject;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import roboguice.activity.RoboActionBarActivity;
+import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
-import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
 import ru.hse.pi273.emy.paul.app.engine.ProbeStatus;
+import ru.hse.pi273.emy.paul.app.representation.ConcreteTaskStringsKeeper;
 import ru.hse.pi273.emy.paul.app.representation.Task;
+import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
-public class CreateTaskActivity extends RoboActionBarActivity {
-    Engine engine = PersistentEngine.getInstance();
-    int Hours, Minutes;
-    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            Hours = hourOfDay;
-            Minutes = minute;
-            timeChosen.setText("" + Hours + ":" + Minutes);
-        }
-    };
+public class CreateTaskActivity extends RoboActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
+    @Inject
+    Engine engine;
+    @Inject
+    TaskStringKeeper taskStrings = new ConcreteTaskStringsKeeper();
     @InjectView(R.id.time_chosen)
     TextView timeChosen;
     @InjectView(R.id.day_chosen)
@@ -46,32 +42,28 @@ public class CreateTaskActivity extends RoboActionBarActivity {
     TextView helperText;
     @InjectView(R.id.add_new_task_button)
     Button addingButton;
+
     int day;
-    int mode;
-    String days[];
     DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
-            ListView lv = ((AlertDialog) dialog).getListView();
             if (which == Dialog.BUTTON_POSITIVE) {
-                // выводим в лог позицию выбранного элемента
-                day = lv.getCheckedItemPosition();
-                dayChosen.setText(days[day]);
+                day = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                dayChosen.setText(taskStrings.getDays()[day]);
                 probe();
             }
         }
     };
-    String modes[];
+    int mode;
     DialogInterface.OnClickListener myAnotherClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
-            ListView lv = ((AlertDialog) dialog).getListView();
             if (which == Dialog.BUTTON_POSITIVE) {
-                // выводим в лог позицию выбранного элемента
-                mode = lv.getCheckedItemPosition();
-                modeChosen.setText(modes[mode]);
+                mode = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                modeChosen.setText(taskStrings.getModes()[mode]);
                 probe();
             }
         }
     };
+    int Hours, Minutes;
 
     void probe() {
         ProbeStatus result = engine.probe(day);
@@ -168,19 +160,7 @@ public class CreateTaskActivity extends RoboActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        days = new String[]{
-                getResources().getString(R.string.day_sunday),
-                getResources().getString(R.string.day_monday),
-                getResources().getString(R.string.day_tuesday),
-                getResources().getString(R.string.day_wednesday),
-                getResources().getString(R.string.day_thursday),
-                getResources().getString(R.string.day_friday),
-                getResources().getString(R.string.day_saturday),
-        };
-        modes = new String[]{
-                getResources().getString(R.string.mode_day),
-                getResources().getString(R.string.mode_night),
-        };
+
         addingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,52 +186,14 @@ public class CreateTaskActivity extends RoboActionBarActivity {
 
             Minutes = calendar.get(Calendar.MINUTE);
             day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-            switch (day) {
-                case Calendar.MONDAY:
-                    Log.d("Calendar", "MO");
-                    break;
-                case Calendar.TUESDAY:
-                    Log.d("Calendar", "TU");
-                    break;
-                case Calendar.WEDNESDAY:
-                    Log.d("Calendar", "WE");
-                    break;
-                case Calendar.THURSDAY:
-                    Log.d("Calendar", "TH");
-                    break;
-                case Calendar.FRIDAY:
-                    Log.d("Calendar", "FR");
-                    break;
-                case Calendar.SATURDAY:
-                    Log.d("Calendar", "SA");
-                    break;
-                case Calendar.SUNDAY:
-                    Log.d("Calendar", "SU");
-                    break;
-            }
             mode = 2;
         }
         timeChosen.setText("" + Hours + ":" + Minutes); //TODO this stub produces trash like that 1:0
-        timeChosen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog(1);
-            }
-        });
-        dayChosen.setText(days[day]);
-        dayChosen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog(2);
-            }
-        });
-        modeChosen.setText("" + (mode == 2 ? ("Tap here to select mode") : (mode == 0 ? "Day" : "Night")));
-        modeChosen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog(3);
-            }
-        });
+        timeChosen.setOnClickListener(this);
+        dayChosen.setText(taskStrings.getDays()[day]);
+        dayChosen.setOnClickListener(this);
+        modeChosen.setText("" + taskStrings.getModes()[mode]);
+        modeChosen.setOnClickListener(this);
     }
 
     @Override
@@ -276,13 +218,12 @@ public class CreateTaskActivity extends RoboActionBarActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == 1) {
-            TimePickerDialog tpd = new TimePickerDialog(this, myCallBack, Hours, Minutes, true);
-            return tpd;
+            return new TimePickerDialog(this, this, Hours, Minutes, true);
         }
         if (id == 2) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setTitle(R.string.day_dialog_title);
-            adb.setSingleChoiceItems(days, day, myClickListener);
+            adb.setSingleChoiceItems(taskStrings.getDays(), day, myClickListener);
 
             adb.setPositiveButton(R.string.button_chose, myClickListener);
             return adb.create();
@@ -290,11 +231,29 @@ public class CreateTaskActivity extends RoboActionBarActivity {
         if (id == 3) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setTitle(R.string.mode_dialog_title);
-            adb.setSingleChoiceItems(modes, day, myAnotherClickListener);
+            adb.setSingleChoiceItems(taskStrings.getModes(), day, myAnotherClickListener);
 
             adb.setPositiveButton(R.string.button_chose, myAnotherClickListener);
             return adb.create();
         }
         return super.onCreateDialog(id);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (timeChosen.equals(view)) {
+            showDialog(1);
+        } else if (dayChosen.equals(view)) {
+            showDialog(2);
+        } else if (modeChosen.equals(view)) {
+            showDialog(3);
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int i, int i2) {
+        Hours = i;
+        Minutes = i2;
+        timeChosen.setText("" + Hours + ":" + Minutes);
     }
 }

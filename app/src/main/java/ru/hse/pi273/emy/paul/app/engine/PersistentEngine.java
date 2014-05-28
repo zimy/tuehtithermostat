@@ -1,5 +1,7 @@
 package ru.hse.pi273.emy.paul.app.engine;
 
+import com.google.inject.Singleton;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -11,23 +13,9 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
  * Created by Dmitry 'Zimy' Yakovlev
  * on 27.05.14.
  */
+@Singleton
 public class PersistentEngine implements Engine {
-    private static PersistentEngine instance;
     private List<Task> tasks = new CopyOnWriteArrayList<>();
-
-    private PersistentEngine() {
-    }
-
-    public static PersistentEngine getInstance() {
-        if (null == instance) {
-            synchronized (PersistentEngine.class) {
-                if (null == instance) {
-                    instance = new PersistentEngine();
-                }
-            }
-        }
-        return instance;
-    }
 
     @Override
     public ProbeStatus probe(int day) {
@@ -72,6 +60,7 @@ public class PersistentEngine implements Engine {
         tasks.add(task);
     }
 
+    @Override
     public List<Task> getTasks() {
         return tasks;
     }

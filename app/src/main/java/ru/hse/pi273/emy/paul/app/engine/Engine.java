@@ -1,5 +1,7 @@
 package ru.hse.pi273.emy.paul.app.engine;
 
+import java.util.List;
+
 import ru.hse.pi273.emy.paul.app.representation.Task;
 
 /**
@@ -11,5 +13,7 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
 public interface Engine {
     public ProbeStatus probe(int day);
 
-    void add(Task task);
+    public void add(Task task);
+
+    public List<Task> getTasks();
 }

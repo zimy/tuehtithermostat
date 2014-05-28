@@ -2,7 +2,6 @@ package ru.hse.pi273.emy.paul.app.view.week;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,33 +9,39 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.List;
+import com.google.inject.Inject;
 
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
+import ru.hse.pi273.emy.paul.app.engine.Engine;
 import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
-import ru.hse.pi273.emy.paul.app.representation.Task;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
-public class WeekViewActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
-
-    List<Task> content = PersistentEngine.getInstance().getTasks();
+public class WeekViewActivity extends RoboActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+    @Inject
+    Engine engine = new PersistentEngine();
+    @InjectView(R.id.listView)
+    ListView listView;
+    @InjectView(R.id.weekViewButton)
+    Button button;
+    WeekListAdapter week;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
-        ListView lv = (ListView) findViewById(R.id.listView);
-        WeekListAdapter week = new WeekListAdapter(this, content);
-        lv.setAdapter(week);
-        lv.setOnItemClickListener(this);
-        Button b = (Button) findViewById(R.id.weekViewButton);
-        b.setOnClickListener(this);
+        week = new WeekListAdapter(this, engine.getTasks());
+        listView.setAdapter(week);
+        week.notifyDataSetChanged();
+        listView.setOnItemClickListener(this);
+        button.setOnClickListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        week.notifyDataSetChanged();
     }
 
     @Override
