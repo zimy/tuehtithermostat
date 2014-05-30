@@ -27,6 +27,7 @@
     <string name="mode">Mode</string>
     <string name="mode_stub">Tap here to select mode</string>
     <string name="button_add">Add</string>
+    <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_chose">Chose</string>
 

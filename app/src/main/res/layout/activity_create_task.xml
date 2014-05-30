@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="@string/button_add" />
+            android:text="@string/button_save" />
 
         <!--<Button-->
         <!--android:id="@+id/cancel_button"-->

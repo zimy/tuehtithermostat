@@ -192,7 +192,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         timeChosen.setOnClickListener(this);
         dayChosen.setText(taskStrings.getDays()[day]);
         dayChosen.setOnClickListener(this);
-        modeChosen.setText("" + taskStrings.getModes()[mode]);
+        modeChosen.setText("" + taskStrings.getModeMessages()[mode]);
         modeChosen.setOnClickListener(this);
     }
 

@@ -13,4 +13,6 @@ public interface TaskStringKeeper {
     public String[] getDays();
 
     public String[] getModes();
+
+    public String[] getModeMessages();
 }

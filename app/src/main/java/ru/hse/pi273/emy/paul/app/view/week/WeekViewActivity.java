@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -18,13 +17,11 @@ import ru.hse.pi273.emy.paul.app.engine.Engine;
 import ru.hse.pi273.emy.paul.app.engine.PersistentEngine;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
-public class WeekViewActivity extends RoboActionBarActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class WeekViewActivity extends RoboActionBarActivity implements AdapterView.OnItemClickListener {
     @Inject
     Engine engine = new PersistentEngine();
     @InjectView(R.id.listView)
     ListView listView;
-    @InjectView(R.id.weekViewButton)
-    Button button;
     WeekListAdapter week;
 
     @Override
@@ -35,7 +32,6 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
         listView.setAdapter(week);
         week.notifyDataSetChanged();
         listView.setOnItemClickListener(this);
-        button.setOnClickListener(this);
     }
 
     @Override
@@ -57,7 +53,8 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            startActivity(new Intent(this, CreateTaskActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -66,10 +63,5 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-    }
-
-    @Override
-    public void onClick(View view) {
-        startActivity(new Intent(this, CreateTaskActivity.class));
     }
 }

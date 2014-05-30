@@ -42,6 +42,11 @@ public class ConcreteTaskStringsKeeper implements TaskStringKeeper {
 
     @Override
     public String[] getModes() {
+        return new String[]{Day, Night};
+    }
+
+    @Override
+    public String[] getModeMessages() {
         return new String[]{Day, Night, NotSet};
     }
 }
