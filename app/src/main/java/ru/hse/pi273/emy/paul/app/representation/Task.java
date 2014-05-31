@@ -41,11 +41,8 @@ public class Task implements Comparable<Task> {
 
         Task task = (Task) o;
 
-        if (day != task.day) return false;
-        if (hours != task.hours) return false;
-        if (minutes != task.minutes) return false;
+        return day == task.day && hours == task.hours && minutes == task.minutes;
 
-        return true;
     }
 
     @Override

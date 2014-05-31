@@ -18,5 +18,5 @@ public interface Engine {
 
     public void add(Task task);
 
-    public List<Task> getTasks();
+    public List<Task> getTasks(int day);
 }

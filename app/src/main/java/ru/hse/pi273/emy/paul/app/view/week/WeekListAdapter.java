@@ -7,10 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.representation.Task;
+import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
 /**
  * Higher School of Economics
@@ -19,6 +22,8 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
  * on 26.05.14.
  */
 public class WeekListAdapter extends BaseAdapter {
+    @Inject
+    TaskStringKeeper stringKeeper;
     Context ctx;
     LayoutInflater inflater;
     List<Task> objects;
@@ -52,7 +57,10 @@ public class WeekListAdapter extends BaseAdapter {
         }
         Task c = objects.get(i);
         if (view1 != null) {
-            ((TextView) view1.findViewById(R.id.adapter_text)).setText("" + c.getDay() + " " + c.getHours() + ":" + c.getMinutes() + " " + c.getMode());
+            int hours = c.getHours(), minutes = c.getMinutes();
+            String mode = stringKeeper.getModes()[c.getMode()];
+            ((TextView) view1.findViewById(R.id.adapter_time)).setText("" + (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes));
+            ((TextView) view1.findViewById(R.id.adapter_mode)).setText("" + mode);
         }
         return view1;
     }

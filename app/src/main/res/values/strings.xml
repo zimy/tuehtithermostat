@@ -30,8 +30,6 @@
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_chose">Chose</string>
-
-
     <string name="mode_not_selected_error">Mode not selected. Chose one to be able to add task to schedule</string>
     <string name="limits_ok">Now you can add task</string>
     <string name="lim_d_today">Daily limit of switches to DAY mode hit. Select another day or NIGHT mode</string>
@@ -41,5 +39,8 @@
     <string name="lim_n">Limit of switches to NIGHT mode hit. You are able to select only DAY mode</string>
     <string name="lim">The limit of switches hit. Try deleting some switches</string>
     <string name="inner_error">Inner architectural error. It is not normal to see it here</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stub_time">ST:UB</string>
+    <string name="stub_mode">NIGHT, DAY, STUB!</string>
 
 </resources>

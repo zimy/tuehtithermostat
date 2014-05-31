@@ -1,9 +1,11 @@
 package ru.hse.pi273.emy.paul.app.engine;
 
+import android.util.Log;
+
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
 
@@ -15,53 +17,62 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
  */
 @Singleton
 public class PersistentEngine implements Engine {
-    private List<Task> tasks = new CopyOnWriteArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
+    private final List<List<Task>> tasksByDay = new ArrayList<>();
+
+    PersistentEngine() {
+        for (int i = 0; i < 7; i++) {
+            tasksByDay.add(new ArrayList<Task>());
+        }
+        Log.d("Engine", "Created");
+    }
 
     @Override
     public ProbeStatus probe(int day) {
-        int totalday = 0, totalnight = 0, currentday = 0, currentnight = 0;
+        ProbeStatus status;
+        int totalDay = 0, totalNight = 0, currentDay = 0, currentNight = 0;
         for (Task task : tasks) {
             if ((task.getMode() == 0)) {
-                totalday++;
+                totalDay++;
                 if (task.getDay() == day) {
-                    currentday++;
+                    currentDay++;
                 }
             } else {
-                totalnight++;
-
+                totalNight++;
                 if (task.getDay() == day) {
-                    currentnight++;
+                    currentNight++;
                 }
             }
         }
-        if (totalday + totalnight == 70) {
-            return ProbeStatus.LIM;
+        if (totalDay + totalNight == 70) {
+            status = ProbeStatus.LIM;
+        } else if (currentDay + currentNight == 10) {
+            status = ProbeStatus.LIM_TODAY;
+        } else if (totalDay == 35) {
+            status = ProbeStatus.LIM_D;
+        } else if (totalNight == 35) {
+            status = ProbeStatus.LIM_N;
+        } else if (currentDay == 5) {
+            status = ProbeStatus.LIM_D_TODAY;
+        } else if (currentNight == 5) {
+            status = ProbeStatus.LIM_N_TODAY;
+        } else {
+            status = ProbeStatus.OK;
         }
-        if (currentday + currentnight == 10) {
-            return ProbeStatus.LIM_TODAY;
-        }
-        if (totalday == 35) {
-            return ProbeStatus.LIM_D;
-        }
-        if (totalnight == 35) {
-            return ProbeStatus.LIM_N;
-        }
-        if (currentday == 5) {
-            return ProbeStatus.LIM_D_TODAY;
-        }
-        if (currentnight == 5) {
-            return ProbeStatus.LIM_N_TODAY;
-        }
-        return ProbeStatus.OK;
+        Log.d("Engine", "Probed " + day + ", " + status);
+        return status;
     }
 
     @Override
     public void add(Task task) {
         tasks.add(task);
+        tasksByDay.get(task.getDay()).add(task);
+        Log.d("Engine", "Added to " + task.getDay());
     }
 
     @Override
-    public List<Task> getTasks() {
-        return tasks;
+    public List<Task> getTasks(int day) {
+        Log.d("Engine", "Requested " + day);
+        return tasksByDay.get(day);
     }
 }
