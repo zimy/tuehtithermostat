@@ -1,12 +1,12 @@
 package ru.hse.pi273.emy.paul.app.view.task;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
@@ -26,7 +27,8 @@ import ru.hse.pi273.emy.paul.app.representation.ConcreteTaskStringsKeeper;
 import ru.hse.pi273.emy.paul.app.representation.Task;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
-public class CreateTaskActivity extends RoboActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
+@ContentView(R.layout.activity_create_task)
+public class CreateTaskActivity extends RoboActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, OnFragmentInteractionListener {
     @Inject
     Engine engine;
     @Inject
@@ -41,27 +43,8 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     TextView helperText;
     @InjectView(R.id.add_new_task_button)
     Button addingButton;
-
     int day;
-    DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-            if (which == Dialog.BUTTON_POSITIVE) {
-                day = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                dayChosen.setText(taskStrings.getDays()[day]);
-                probe();
-            }
-        }
-    };
     int mode;
-    DialogInterface.OnClickListener myAnotherClickListener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-            if (which == Dialog.BUTTON_POSITIVE) {
-                mode = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                modeChosen.setText(taskStrings.getModes()[mode]);
-                probe();
-            }
-        }
-    };
     int Hours, Minutes;
 
     void probe() {
@@ -158,8 +141,9 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_task);
-
+        ActionBar bar = getSupportActionBar();
+        bar.setHomeButtonEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
         addingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -187,7 +171,8 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
             day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
             mode = 2;
         }
-        timeChosen.setText("" + Hours + ":" + Minutes); //TODO this stub produces trash like that 1:0
+        Log.d("CreateTask", "Today is " + day + " day of week, " + Hours + ":" + Minutes);
+        timeChosen.setText("" + (Hours < 10 ? "0" + Hours : Hours) + ":" + (Minutes < 10 ? "0" + Minutes : Minutes));
         timeChosen.setOnClickListener(this);
         dayChosen.setText(taskStrings.getDays()[day]);
         dayChosen.setOnClickListener(this);
@@ -197,43 +182,27 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.create_task, menu);
         return true;
     }
 
     @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == 1) {
-            return new TimePickerDialog(this, this, Hours, Minutes, true);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
-        if (id == 2) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            adb.setTitle(R.string.day_dialog_title);
-            adb.setSingleChoiceItems(taskStrings.getDays(), day, myClickListener);
-
-            adb.setPositiveButton(R.string.button_chose, myClickListener);
-            return adb.create();
-        }
-        if (id == 3) {
-            AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            adb.setTitle(R.string.mode_dialog_title);
-            adb.setSingleChoiceItems(taskStrings.getModes(), day, myAnotherClickListener);
-
-            adb.setPositiveButton(R.string.button_chose, myAnotherClickListener);
-            return adb.create();
-        }
-        return super.onCreateDialog(id);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onClick(View view) {
         if (timeChosen.equals(view)) {
-            showDialog(1);
+            (new TimePickerDialog(this, this, Hours, Minutes, true)).show();
         } else if (dayChosen.equals(view)) {
-            showDialog(2);
+            DayDialog.newInstance(day).show(getSupportFragmentManager(), "Day Dialog");
         } else if (modeChosen.equals(view)) {
-            showDialog(3);
+            ModeDialog.newInstance(mode).show(getSupportFragmentManager(), "Mode Dialog");
         }
     }
 
@@ -241,6 +210,21 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     public void onTimeSet(TimePicker timePicker, int i, int i2) {
         Hours = i;
         Minutes = i2;
-        timeChosen.setText("" + Hours + ":" + Minutes);
+        timeChosen.setText("" + (Hours < 10 ? "0" + Hours : Hours) + ":" + (Minutes < 10 ? "0" + Minutes : Minutes));
+    }
+
+    @Override
+    public void onFragmentInteraction(DialogCallback callbackMode, int value) {
+        switch (callbackMode) {
+            case DAY:
+                day = value;
+                dayChosen.setText(taskStrings.getDays()[day]);
+                break;
+            case MODE:
+                mode = value;
+                modeChosen.setText(taskStrings.getModes()[mode]);
+                break;
+        }
+        probe();
     }
 }

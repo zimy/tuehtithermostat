@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.inject.Singleton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
@@ -67,6 +68,7 @@ public class PersistentEngine implements Engine {
     public void add(Task task) {
         tasks.add(task);
         tasksByDay.get(task.getDay()).add(task);
+        Collections.sort(tasksByDay.get(task.getDay()));
         Log.d("Engine", "Added to " + task.getDay());
     }
 

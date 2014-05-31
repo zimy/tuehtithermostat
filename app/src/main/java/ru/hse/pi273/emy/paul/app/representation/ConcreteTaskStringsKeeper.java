@@ -37,7 +37,7 @@ public class ConcreteTaskStringsKeeper implements TaskStringKeeper {
 
     @Override
     public String[] getDays() {
-        return new String[]{Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
+        return new String[]{Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday};
     }
 
     @Override

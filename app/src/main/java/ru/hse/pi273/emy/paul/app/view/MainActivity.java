@@ -2,23 +2,24 @@ package ru.hse.pi273.emy.paul.app.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.view.week.WeekViewActivity;
 
-
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+@ContentView(R.layout.activity_main)
+public class MainActivity extends RoboActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        View click = findViewById(R.id.addtask);
-        click.setOnClickListener(this);
+        ActionBar bar = getSupportActionBar();
+        bar.setHomeButtonEnabled(true);
     }
 
 
@@ -35,14 +36,15 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_week) {
+            startActivity(new Intent(this, WeekViewActivity.class));
+            return true;
+        }
+        if (id == android.R.id.home) {
+            //here will switch to main tab
+            Log.d("STUB", "Stub");
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View view) {
-        startActivity(new Intent(this, WeekViewActivity.class));
     }
 }

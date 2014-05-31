@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
+import roboguice.RoboGuice;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.representation.Task;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
@@ -32,6 +33,7 @@ public class WeekListAdapter extends BaseAdapter {
         this.ctx = ctx;
         this.objects = objects;
         inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        RoboGuice.getInjector(ctx).injectMembersWithoutViews(this);
     }
 
     @Override

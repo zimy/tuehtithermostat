@@ -17,10 +17,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
+@ContentView(R.layout.activity_week_view)
 public class WeekViewActivity extends RoboActionBarActivity implements AdapterView.OnItemClickListener, ActionBar.OnNavigationListener {
     @Inject
     TaskStringKeeper stringKeeper;
@@ -29,7 +31,6 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_week_view);
         ActionBar bar = getSupportActionBar();
         assert bar != null;
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -37,15 +38,11 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
                 android.R.layout.simple_spinner_item, stringKeeper.getDays());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bar.setListNavigationCallbacks(adapter, this);
-
-    }
-
-    @Override
-    protected void onResume() {
+        bar.setHomeButtonEnabled(true);
+        bar.setDisplayHomeAsUpEnabled(true);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         getSupportActionBar().setSelectedNavigationItem(calendar.get(Calendar.DAY_OF_WEEK) - 1);
-        super.onResume();
     }
 
     @Override
@@ -57,6 +54,10 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
         if (id == R.id.action_add) {
             startActivity(new Intent(this, CreateTaskActivity.class));
             return true;
