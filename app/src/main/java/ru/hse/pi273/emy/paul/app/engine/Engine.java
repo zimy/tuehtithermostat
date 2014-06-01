@@ -15,7 +15,7 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
  */
 @ImplementedBy(PersistentEngine.class)
 public interface Engine {
-    public ProbeStatus probe(int day, int hour, int minute);
+    public ProbeStatus probe(int day, int hour, int minute, boolean equals);
 
     public void add(Task task);
 
@@ -31,5 +31,5 @@ public interface Engine {
 
     public void setOverriding(int overrideMode);
 
-    public void remove(int day, int hours, int minutes);
+    public Task remove(int day, int hours, int minutes);
 }

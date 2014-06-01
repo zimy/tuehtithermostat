@@ -38,7 +38,11 @@ public class PersistentEngine implements Engine {
     }
 
     @Override
-    public ProbeStatus probe(int day, int hour, int minute) {
+    public ProbeStatus probe(int day, int hour, int minute, boolean equals) {
+        Task newTask = null;
+        if (equals) {
+            newTask = remove(day, hour, minute);
+        }
         ProbeStatus status;
         int totalDay = 0, totalNight = 0, currentDay = 0, currentNight = 0;
         boolean collision = false;
@@ -74,6 +78,9 @@ public class PersistentEngine implements Engine {
             status = ProbeStatus.OK;
         }
         Log.i("Engine", "Probed " + day + ", " + status);
+        if (equals) {
+            add(newTask);
+        }
         return status;
     }
 
@@ -119,10 +126,11 @@ public class PersistentEngine implements Engine {
     }
 
     @Override
-    public void remove(int day, int hours, int minutes) {
+    public Task remove(int day, int hours, int minutes) {
         Task newTask = new Task(day, 0, hours, minutes);
         for (int i = 0; i < tasks.size(); i++) {
             if (newTask.equals(tasks.get(i))) {
+                newTask = tasks.get(i);
                 tasks.remove(i);
                 break;
             }
@@ -133,5 +141,6 @@ public class PersistentEngine implements Engine {
                 break;
             }
         }
+        return newTask;
     }
 }

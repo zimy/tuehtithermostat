@@ -62,7 +62,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     int Day, Hours, Minutes;
 
     void probe() {
-        ProbeStatus result = engine.probe(Day, Hours, Minutes);
+        ProbeStatus result = engine.probe(Day, Hours, Minutes, "Edit".equals(action));
         boolean btn = false;
         boolean editing = "Edit".equals(action) && iniDay == Day && iniHours == Hours && iniMinutes == Minutes;
         int msg = R.string.inner_error;
