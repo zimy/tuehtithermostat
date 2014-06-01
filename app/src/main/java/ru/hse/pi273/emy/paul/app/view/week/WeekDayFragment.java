@@ -100,6 +100,9 @@ public class WeekDayFragment extends RoboFragment implements AdapterView.OnItemC
             listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         } else {
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+            for (int i = 0; i < week.objects.size(); i++) {
+                listView.setItemChecked(i, false);
+            }
         }
     }
 

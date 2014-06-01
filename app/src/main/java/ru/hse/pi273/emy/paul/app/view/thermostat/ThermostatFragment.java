@@ -2,6 +2,7 @@ package ru.hse.pi273.emy.paul.app.view.thermostat;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     String dateFormatter;
     int temperature;
     int lastTemp = 0;
+    boolean firstLook = true;
     private int tab;
     private int min = 50;
     private Task date;
@@ -102,28 +104,29 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
 
     @Override
     public void onPause() {
+        firstLook = true;
         super.onPause();
         engine.delObserver();
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if (lastTemp != i) {
+        if (!firstLook) {
             megoTextView.setText(String.format(megoFormatter, (min + i) / 10, i % 10));
             if (tab == 0) {
-
                 overrideMode = overrideMode == 0 ? 1 : overrideMode;
                 engine.setOverriding(overrideMode);
             }
             lastTemp = i;
             engine.setTemperature(tab, min + i);
-        }
 
+            Log.i("Home", "Changing!");
+        }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        firstLook = false;
     }
 
     @Override

@@ -23,7 +23,7 @@
     <string name="screen_home">Home</string>
     <string name="start_time">Start time</string>
     <string name="time_stub">Set this to NOW</string>
-    <string name="day">Start day</string>
+    <string name="day">Day</string>
     <string name="day_stub">Set this to TODAY</string>
     <string name="mode">Mode</string>
     <string name="mode_stub">Tap here to select mode</string>
