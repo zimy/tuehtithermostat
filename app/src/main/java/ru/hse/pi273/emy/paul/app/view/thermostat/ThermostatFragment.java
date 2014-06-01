@@ -37,8 +37,6 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     SeekBar seekBar;
     @InjectView(R.id.override_buttons)
     LinearLayout linearLayout;
-    @InjectView(R.id.button_override)
-    ToggleButton overrideButton;
     @InjectView(R.id.button_vacation)
     ToggleButton vacationButton;
     @InjectResource(R.string.formatter_range)
@@ -50,6 +48,7 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     @InjectResource(R.string.formatter_date)
     String dateFormatter;
     int temperature;
+    int lastTemp = 0;
     private int tab;
     private int min;
     private Date date;
@@ -83,9 +82,9 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        temperature = engine.getTemperature(tab);
+        lastTemp = temperature = engine.getTemperature(tab);
         min = 50;
-        megoTextView.setText(String.format(megoFormatter, 20, 0));
+        megoTextView.setText(String.format(megoFormatter, temperature / 10, temperature % 10));
         seekBar.setMax(250);
         seekBar.setOnSeekBarChangeListener(this);
         seekBar.setProgress(150);
@@ -98,9 +97,6 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
             left.setText(String.format(tempFormatter, 5, 30, 0.1));
         } else {
             left.setText(String.format(modeFormatter, stringKeeper.getModes()[engine.getMode()]));
-            seekBar.setEnabled(false);
-            vacationButton.setEnabled(false);
-            overrideButton.setOnClickListener(this);
             vacationButton.setOnClickListener(this);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
@@ -110,8 +106,17 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        megoTextView.setText(String.format(megoFormatter, (min + i) / 10, i % 10));
-        engine.setTemperature(tab, min + i);
+        if (lastTemp != i) {
+            megoTextView.setText(String.format(megoFormatter, (min + i) / 10, i % 10));
+            if (tab == 0) {
+
+                overrideMode = overrideMode == 0 ? 1 : overrideMode;
+                engine.setOverriding(overrideMode);
+            }
+            lastTemp = i;
+            engine.setTemperature(tab, min + i);
+        }
+
     }
 
     @Override
@@ -126,15 +131,9 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.button_override) {
-            overrideMode = overrideMode == 0 ? 1 : 0;
-            vacationButton.setEnabled(overrideMode == 1);
-            seekBar.setEnabled(overrideMode == 1);
-            engine.setPermanentOverriding(false);
-            vacationButton.setChecked(false);
-        } else if (view.getId() == R.id.button_vacation) {
-            overrideMode = overrideMode == 1 ? 2 : 1;
-            engine.setPermanentOverriding(overrideMode == 2);
+        if (view.getId() == R.id.button_vacation) {
+            overrideMode = overrideMode == 1 || overrideMode == 0 ? 2 : 0;
+            engine.setOverriding(overrideMode);
         }
     }
 }

@@ -26,7 +26,7 @@ public class PersistentEngine implements Engine {
     int up, down;
     int[] temperatures = new int[]{200, 200, 200};
     int mode = 0;
-    boolean overriding = false;
+    int overriding = 0;
 
     PersistentEngine() {
         for (int i = 0; i < 7; i++) {
@@ -34,7 +34,7 @@ public class PersistentEngine implements Engine {
         }
         up = Integer.parseInt(sup);
         down = Integer.parseInt(sDown);
-        Log.d("Engine", "Created");
+        Log.i("Engine", "Created");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PersistentEngine implements Engine {
         } else {
             status = ProbeStatus.OK;
         }
-        Log.d("Engine", "Probed " + day + ", " + status);
+        Log.i("Engine", "Probed " + day + ", " + status);
         return status;
     }
 
@@ -82,12 +82,12 @@ public class PersistentEngine implements Engine {
         tasks.add(task);
         tasksByDay.get(task.getDay()).add(task);
         Collections.sort(tasksByDay.get(task.getDay()));
-        Log.d("Engine", "Added to " + task.getDay());
+        Log.i("Engine", "Added to " + task.getDay());
     }
 
     @Override
     public List<Task> getTasks(int day) {
-        Log.d("Engine", "Requested " + day);
+        Log.i("Engine", "Requested " + day);
         return tasksByDay.get(day);
     }
 
@@ -99,7 +99,7 @@ public class PersistentEngine implements Engine {
     @Override
     public void setTemperature(int tab, int temperature) {
         temperatures[tab] = temperature;
-        Log.d("Engine", "" + tab + ":" + temperature);
+        Log.i("Engine", "" + tab + ":" + temperature);
     }
 
     @Override
@@ -113,8 +113,25 @@ public class PersistentEngine implements Engine {
     }
 
     @Override
-    public void setPermanentOverriding(boolean override) {
-        overriding = override;
-        Log.d("Engine", "Override: " + override);
+    public void setOverriding(int overrideMode) {
+        overriding = overrideMode;
+        Log.i("Engine", "Override: " + overrideMode);
+    }
+
+    @Override
+    public void remove(int day, int hours, int minutes) {
+        Task newTask = new Task(day, 0, hours, minutes);
+        for (int i = 0; i < tasks.size(); i++) {
+            if (newTask.equals(tasks.get(i))) {
+                tasks.remove(i);
+                break;
+            }
+        }
+        for (int i = 0; i < tasksByDay.get(day).size(); i++) {
+            if (newTask.equals(tasksByDay.get(day).get(i))) {
+                tasksByDay.get(day).remove(i);
+                break;
+            }
+        }
     }
 }

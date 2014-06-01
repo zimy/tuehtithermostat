@@ -30,6 +30,7 @@
         style="@style/RelLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:orientation="vertical">
 
         <TextView
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/stub_time"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textSize="@dimen/large_font_size" />
 
         <SeekBar
             android:id="@+id/seekBar"
@@ -54,15 +55,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/seekBar"
             android:orientation="horizontal">
-
-            <ToggleButton
-                android:id="@+id/button_override"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="6dp"
-                android:textOff="@string/button_overriding"
-                android:textOn="@string/button_overriding" />
 
             <ToggleButton
                 android:id="@+id/button_vacation"

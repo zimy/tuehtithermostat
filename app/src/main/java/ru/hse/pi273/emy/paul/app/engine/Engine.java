@@ -29,5 +29,7 @@ public interface Engine {
 
     public int getMode();
 
-    public void setPermanentOverriding(boolean override);
+    public void setOverriding(int overrideMode);
+
+    public void remove(int day, int hours, int minutes);
 }

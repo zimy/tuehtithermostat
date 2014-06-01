@@ -51,8 +51,10 @@
     <string name="button_overriding">Overriding</string>
     <string name="button_vacation">Vacation</string>
     <string name="formatter_range" formatted="false">You can adjust temperature in range from %s°C to %s°C with step %s°C</string>
-    <string name="formatter_mego" formatted="false">%s.%s</string>
+    <string name="formatter_mego" formatted="false">%s.%s°C</string>
     <string name="formatter_mode" formatted="false">%s</string>
     <string name="formatter_date" formatted="false">%s, %s:%s</string>
     <string name="range_stub">Current mode stub</string>
+    <string name="button_remove">Delete</string>
+    <string name="button_remove_selected">Delete selected</string>
 </resources>

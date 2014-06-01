@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.google.inject.Inject;
@@ -23,10 +21,12 @@ import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
 @ContentView(R.layout.activity_week_view)
-public class WeekViewActivity extends RoboActionBarActivity implements AdapterView.OnItemClickListener, ActionBar.OnNavigationListener {
+public class WeekViewActivity extends RoboActionBarActivity implements ActionBar.OnNavigationListener, ActionMode.Callback {
     @Inject
     TaskStringKeeper stringKeeper;
     FragmentTransaction fTrans;
+    ActionMode actionMode;
+    int Day = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,23 +59,45 @@ public class WeekViewActivity extends RoboActionBarActivity implements AdapterVi
             return true;
         }
         if (id == R.id.action_add) {
-            startActivity(new Intent(this, CreateTaskActivity.class));
+            startActivity(new Intent(this, CreateTaskActivity.class).putExtra("Day", Day).putExtra("Action", "New"));
             return true;
+        }
+        if (id == R.id.action_delete) {
+            actionMode = startSupportActionMode(this);
+            ((WeekDayFragment) getSupportFragmentManager().findFragmentById(R.id.frCont)).multiChose(true);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
     public boolean onNavigationItemSelected(int i, long l) {
-        Log.d("WeekViewActivity", "" + i + " " + l);
         fTrans = getSupportFragmentManager().beginTransaction();
         fTrans.replace(R.id.frCont, WeekDayFragment.newInstance(i));
         fTrans.commit();
+        Day = i;
         return false;
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        actionMode.getMenuInflater().inflate(R.menu.week_context, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        ((WeekDayFragment) getSupportFragmentManager().findFragmentById(R.id.frCont)).deleteSelected();
+        actionMode.finish();
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        ((WeekDayFragment) getSupportFragmentManager().findFragmentById(R.id.frCont)).multiChose(false);
     }
 }

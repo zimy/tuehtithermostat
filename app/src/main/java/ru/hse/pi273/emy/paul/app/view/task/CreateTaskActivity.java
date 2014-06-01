@@ -1,10 +1,8 @@
 package ru.hse.pi273.emy.paul.app.view.task;
 
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +17,7 @@ import java.util.Date;
 
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
@@ -29,6 +28,13 @@ import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
 @ContentView(R.layout.activity_create_task)
 public class CreateTaskActivity extends RoboActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, OnFragmentInteractionListener {
+    private static Calendar calendar;
+
+    static {
+        calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+    }
+
     @Inject
     Engine engine;
     @Inject
@@ -43,13 +49,22 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     TextView helperText;
     @InjectView(R.id.add_new_task_button)
     Button addingButton;
-    int day;
-    int mode;
-    int Hours, Minutes;
+    @InjectExtra("Action")
+    String action;
+    @InjectExtra(value = "Day", optional = true)
+    int iniDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+    @InjectExtra(value = "Mode", optional = true)
+    int mode = 2;
+    @InjectExtra(value = "Hours", optional = true)
+    int iniHours = calendar.get(Calendar.HOUR_OF_DAY);
+    @InjectExtra(value = "Minutes", optional = true)
+    int iniMinutes = calendar.get(Calendar.MINUTE);
+    int Day, Hours, Minutes;
 
     void probe() {
-        ProbeStatus result = engine.probe(day, Hours, Minutes);
+        ProbeStatus result = engine.probe(Day, Hours, Minutes);
         boolean btn = false;
+        boolean editing = "Edit".equals(action) && iniDay == Day && iniHours == Hours && iniMinutes == Minutes;
         int msg = R.string.inner_error;
         switch (result) {
             case OK:
@@ -66,8 +81,8 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
                 }
                 break;
             case COLLISION:
-                btn = false;
-                msg = R.string.collision;
+                btn = editing;
+                msg = editing ? R.string.limits_ok : R.string.collision;
                 break;
             case LIM_D_TODAY:
                 switch (mode) {
@@ -131,6 +146,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
                         break;
                 }
                 break;
+            case LIM:
             default:
                 btn = false;
                 msg = R.string.lim;
@@ -148,37 +164,18 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         ActionBar bar = getSupportActionBar();
         bar.setHomeButtonEnabled(true);
         bar.setDisplayHomeAsUpEnabled(true);
-        addingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                engine.add(new Task(day, mode, Hours, Minutes));
-                finish();
-            }
-        });
+        addingButton.setOnClickListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent = getIntent();
-        if ("EDIT".equals(intent.getStringExtra("Action"))) {
-            Hours = Integer.parseInt(intent.getStringExtra("Hours"));
-            Minutes = Integer.parseInt(intent.getStringExtra("Minutes"));
-            day = Integer.parseInt(intent.getStringExtra("Day"));
-            mode = Integer.parseInt(intent.getStringExtra("Mode"));
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            Hours = calendar.get(Calendar.HOUR_OF_DAY);
-
-            Minutes = calendar.get(Calendar.MINUTE);
-            day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-            mode = 2;
-        }
-        Log.d("CreateTask", "Today is " + day + " day of week, " + Hours + ":" + Minutes);
+        Day = iniDay;
+        Hours = iniHours;
+        Minutes = iniMinutes;
         timeChosen.setText("" + (Hours < 10 ? "0" + Hours : Hours) + ":" + (Minutes < 10 ? "0" + Minutes : Minutes));
         timeChosen.setOnClickListener(this);
-        dayChosen.setText(taskStrings.getDays()[day]);
+        dayChosen.setText(taskStrings.getDays()[Day]);
         dayChosen.setOnClickListener(this);
         modeChosen.setText("" + taskStrings.getModeMessages()[mode]);
         modeChosen.setOnClickListener(this);
@@ -205,9 +202,15 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         if (timeChosen.equals(view)) {
             (new TimePickerDialog(this, this, Hours, Minutes, true)).show();
         } else if (dayChosen.equals(view)) {
-            DayDialog.newInstance(day).show(getSupportFragmentManager(), "Day Dialog");
+            DayDialog.newInstance(Day).show(getSupportFragmentManager(), "Day Dialog");
         } else if (modeChosen.equals(view)) {
-            ModeDialog.newInstance(mode).show(getSupportFragmentManager(), "Mode Dialog");
+            ModeDialog.newInstance(mode != 2 ? mode : 0).show(getSupportFragmentManager(), "Mode Dialog");
+        } else if (addingButton.equals(view)) {
+            if ("Edit".equals(action)) {
+                engine.remove(iniDay, iniHours, iniMinutes);
+            }
+            engine.add(new Task(Day, mode, Hours, Minutes));
+            finish();
         }
     }
 
@@ -223,8 +226,8 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     public void onFragmentInteraction(DialogCallback callbackMode, int value) {
         switch (callbackMode) {
             case DAY:
-                day = value;
-                dayChosen.setText(taskStrings.getDays()[day]);
+                Day = value;
+                dayChosen.setText(taskStrings.getDays()[Day]);
                 break;
             case MODE:
                 mode = value;
