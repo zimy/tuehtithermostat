@@ -131,7 +131,7 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
             vacationButton.setEnabled(overrideMode == 1);
             seekBar.setEnabled(overrideMode == 1);
             engine.setPermanentOverriding(false);
-            overrideButton.setChecked(false);
+            vacationButton.setChecked(false);
         } else if (view.getId() == R.id.button_vacation) {
             overrideMode = overrideMode == 1 ? 2 : 1;
             engine.setPermanentOverriding(overrideMode == 2);
