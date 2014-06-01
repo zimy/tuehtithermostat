@@ -88,7 +88,7 @@ public class PersistentEngine implements Engine {
             status = ProbeStatus.OK;
         }
         Log.i("Engine", "Probed " + day + ", " + status);
-        if (equals) {
+        if (equals && newTask.getMode() != 7) {
             add(newTask);
         }
         return status;
@@ -137,7 +137,7 @@ public class PersistentEngine implements Engine {
 
     @Override
     public Task remove(int day, int hours, int minutes) {
-        Task newTask = new Task(day, 0, hours, minutes);
+        Task newTask = new Task(day, 7, hours, minutes);
         for (int i = 0; i < tasks.size(); i++) {
             if (newTask.equals(tasks.get(i))) {
                 newTask = tasks.get(i);
