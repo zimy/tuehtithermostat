@@ -65,6 +65,7 @@ public class WeekViewActivity extends RoboActionBarActivity implements ActionBar
         if (id == R.id.action_delete) {
             actionMode = startSupportActionMode(this);
             ((WeekDayFragment) getSupportFragmentManager().findFragmentById(R.id.frCont)).multiChose(true);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

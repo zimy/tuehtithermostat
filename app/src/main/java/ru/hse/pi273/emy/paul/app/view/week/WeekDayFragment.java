@@ -89,7 +89,8 @@ public class WeekDayFragment extends RoboFragment implements AdapterView.OnItemC
                     .putExtra("Minutes", task.getMinutes())
                     .putExtra("Mode", task.getMode()));
         } else {
-            listView.setItemChecked(i, !listView.isItemChecked(i));
+            boolean itemChecked = listView.isItemChecked(i);
+            view.setBackground(getResources().getDrawable(itemChecked ? R.drawable.color_blue : R.drawable.color_white));
         }
     }
 
