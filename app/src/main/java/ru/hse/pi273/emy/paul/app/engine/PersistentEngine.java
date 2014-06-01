@@ -38,9 +38,10 @@ public class PersistentEngine implements Engine {
     }
 
     @Override
-    public ProbeStatus probe(int day) {
+    public ProbeStatus probe(int day, int hour, int minute) {
         ProbeStatus status;
         int totalDay = 0, totalNight = 0, currentDay = 0, currentNight = 0;
+        boolean collision = false;
         for (Task task : tasks) {
             if ((task.getMode() == 0)) {
                 totalDay++;
@@ -53,6 +54,7 @@ public class PersistentEngine implements Engine {
                     currentNight++;
                 }
             }
+            collision = collision | task.equals(new Task(day, 0, hour, minute));
         }
         if (totalDay + totalNight == 70) {
             status = ProbeStatus.LIM;
@@ -66,6 +68,8 @@ public class PersistentEngine implements Engine {
             status = ProbeStatus.LIM_D_TODAY;
         } else if (currentNight == 5) {
             status = ProbeStatus.LIM_N_TODAY;
+        } else if (collision) {
+            status = ProbeStatus.COLLISION;
         } else {
             status = ProbeStatus.OK;
         }

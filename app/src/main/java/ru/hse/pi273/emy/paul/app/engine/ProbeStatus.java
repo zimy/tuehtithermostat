@@ -8,6 +8,7 @@ package ru.hse.pi273.emy.paul.app.engine;
  */
 public enum ProbeStatus {
     OK,
+    COLLISION,
     LIM_D_TODAY,
     LIM_N_TODAY,
     LIM_TODAY,

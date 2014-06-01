@@ -39,6 +39,7 @@
     <string name="lim_d">Limit of switches to DAY mode hit. You are able to select only NIGHT mode</string>
     <string name="lim_n">Limit of switches to NIGHT mode hit. You are able to select only DAY mode</string>
     <string name="lim">The limit of switches hit. Try deleting some switches</string>
+    <string name="collision">Selected time and day is already in use. Change time or day</string>
     <string name="inner_error">Inner architectural error. It is not normal to see it here</string>
     <string name="stub_time">ST:UB</string>
     <string name="stub_mode">NIGHT, DAY, STUB!</string>

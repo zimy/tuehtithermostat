@@ -48,7 +48,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     int Hours, Minutes;
 
     void probe() {
-        ProbeStatus result = engine.probe(day);
+        ProbeStatus result = engine.probe(day, Hours, Minutes);
         boolean btn = false;
         int msg = R.string.inner_error;
         switch (result) {
@@ -64,6 +64,10 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
                         msg = R.string.mode_not_selected_error;
                         break;
                 }
+                break;
+            case COLLISION:
+                btn = false;
+                msg = R.string.collision;
                 break;
             case LIM_D_TODAY:
                 switch (mode) {
@@ -178,6 +182,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         dayChosen.setOnClickListener(this);
         modeChosen.setText("" + taskStrings.getModeMessages()[mode]);
         modeChosen.setOnClickListener(this);
+        probe();
     }
 
     @Override
@@ -211,6 +216,7 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         Hours = i;
         Minutes = i2;
         timeChosen.setText("" + (Hours < 10 ? "0" + Hours : Hours) + ":" + (Minutes < 10 ? "0" + Minutes : Minutes));
+        probe();
     }
 
     @Override

@@ -15,7 +15,7 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
  */
 @ImplementedBy(PersistentEngine.class)
 public interface Engine {
-    public ProbeStatus probe(int day);
+    public ProbeStatus probe(int day, int hour, int minute);
 
     public void add(Task task);
 
