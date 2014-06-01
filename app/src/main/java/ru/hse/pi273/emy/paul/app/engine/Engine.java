@@ -2,6 +2,7 @@ package ru.hse.pi273.emy.paul.app.engine;
 
 import com.google.inject.ImplementedBy;
 
+import java.util.Date;
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
@@ -19,4 +20,14 @@ public interface Engine {
     public void add(Task task);
 
     public List<Task> getTasks(int day);
+
+    public int getTemperature(int tab);
+
+    public void setTemperature(int tab, int temperature);
+
+    public Date getDate();
+
+    public int getMode();
+
+    public void setPermanentOverriding(boolean override);
 }

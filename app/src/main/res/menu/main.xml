@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ru.hse.pi273.emy.paul.app.view.MainActivity">
+    tools:context="ru.hse.pi273.emy.paul.app.view.thermostat.ThermostatActivity">
     <item
         android:id="@+id/action_week"
         android:icon="@android:drawable/ic_menu_my_calendar"

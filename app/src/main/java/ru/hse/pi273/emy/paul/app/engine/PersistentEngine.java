@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
@@ -20,11 +21,19 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
 public class PersistentEngine implements Engine {
     private final List<Task> tasks = new ArrayList<>();
     private final List<List<Task>> tasksByDay = new ArrayList<>();
+    String sup = "1";
+    String sDown = "10";
+    int up, down;
+    int[] temperatures = new int[]{200, 200, 200};
+    int mode = 0;
+    boolean overriding = false;
 
     PersistentEngine() {
         for (int i = 0; i < 7; i++) {
             tasksByDay.add(new ArrayList<Task>());
         }
+        up = Integer.parseInt(sup);
+        down = Integer.parseInt(sDown);
         Log.d("Engine", "Created");
     }
 
@@ -76,5 +85,32 @@ public class PersistentEngine implements Engine {
     public List<Task> getTasks(int day) {
         Log.d("Engine", "Requested " + day);
         return tasksByDay.get(day);
+    }
+
+    @Override
+    public int getTemperature(int tab) {
+        return temperatures[tab];
+    }
+
+    @Override
+    public void setTemperature(int tab, int temperature) {
+        temperatures[tab] = temperature;
+        Log.d("Engine", "" + tab + ":" + temperature);
+    }
+
+    @Override
+    public Date getDate() {
+        return new Date();
+    }
+
+    @Override
+    public int getMode() {
+        return mode;
+    }
+
+    @Override
+    public void setPermanentOverriding(boolean override) {
+        overriding = override;
+        Log.d("Engine", "Override: " + override);
     }
 }

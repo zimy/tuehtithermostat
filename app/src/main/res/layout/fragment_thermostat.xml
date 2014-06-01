@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.thermostat.ThermostatFragment">
+
+    <RelativeLayout
+        style="@style/RelLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/thermostat_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/range_stub" />
+
+        <TextView
+            android:id="@+id/thermostat_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/stub_time" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        style="@style/RelLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/mego_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/stub_time"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mego_text"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/override_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekBar"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/button_override"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:textOff="@string/button_overriding"
+                android:textOn="@string/button_overriding" />
+
+            <ToggleButton
+                android:id="@+id/button_vacation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:textOff="@string/button_vacation"
+                android:textOn="@string/button_vacation" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
