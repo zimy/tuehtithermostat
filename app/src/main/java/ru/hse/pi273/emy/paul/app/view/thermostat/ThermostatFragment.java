@@ -12,14 +12,12 @@ import android.widget.ToggleButton;
 
 import com.google.inject.Inject;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.engine.Engine;
+import ru.hse.pi273.emy.paul.app.representation.Task;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
 public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
@@ -50,8 +48,8 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     int temperature;
     int lastTemp = 0;
     private int tab;
-    private int min;
-    private Date date;
+    private int min = 50;
+    private Task date;
     private int overrideMode = 0;
 
     public ThermostatFragment() {
@@ -82,26 +80,30 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        lastTemp = temperature = engine.getTemperature(tab);
-        min = 50;
-        megoTextView.setText(String.format(megoFormatter, temperature / 10, temperature % 10));
         seekBar.setMax(250);
         seekBar.setOnSeekBarChangeListener(this);
-        seekBar.setProgress(150);
-        date = engine.getDate();
-        right.setText(date.toString());
-
+        vacationButton.setOnClickListener(this);
         if (tab != 0) {
             right.setVisibility(View.GONE);
             linearLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fromEngine();
+        if (tab != 0) {
             left.setText(String.format(tempFormatter, 5, 30, 0.1));
         } else {
-            left.setText(String.format(modeFormatter, stringKeeper.getModes()[engine.getMode()]));
-            vacationButton.setOnClickListener(this);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            right.setText(String.format(dateFormatter, stringKeeper.getDays()[calendar.get(Calendar.DAY_OF_WEEK) - 1], calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
+            engine.setObserver(this);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        engine.delObserver();
     }
 
     @Override
@@ -135,5 +137,24 @@ public class ThermostatFragment extends RoboFragment implements SeekBar.OnSeekBa
             overrideMode = overrideMode == 1 || overrideMode == 0 ? 2 : 0;
             engine.setOverriding(overrideMode);
         }
+    }
+
+    public void update() {
+        fromEngine();
+    }
+
+    private void fromEngine() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                lastTemp = temperature = engine.getTemperature(tab);
+                date = engine.getDate();
+                int hour = date.getHours(), minute = date.getMinutes(), day = date.getDay();
+                left.setText(String.format(modeFormatter, stringKeeper.getModes()[engine.getMode()]));
+                right.setText(String.format(dateFormatter, stringKeeper.getDays()[day], hour < 10 ? "0" + hour : hour, minute < 10 ? "0" + minute : minute));
+                megoTextView.setText(String.format(megoFormatter, temperature / 10, temperature % 10));
+                seekBar.setProgress(temperature - min);
+            }
+        });
     }
 }

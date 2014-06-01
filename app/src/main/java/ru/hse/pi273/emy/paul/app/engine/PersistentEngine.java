@@ -5,11 +5,13 @@ import android.util.Log;
 import com.google.inject.Singleton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
+import ru.hse.pi273.emy.paul.app.view.thermostat.ThermostatFragment;
 
 /**
  * Higher School of Economics
@@ -21,12 +23,15 @@ import ru.hse.pi273.emy.paul.app.representation.Task;
 public class PersistentEngine implements Engine {
     private final List<Task> tasks = new ArrayList<>();
     private final List<List<Task>> tasksByDay = new ArrayList<>();
+    ThermostatFragment observer;
     String sup = "1";
     String sDown = "10";
     int up, down;
     int[] temperatures = new int[]{200, 200, 200};
+    int scheduleTemp = 200;
     int mode = 0;
     int overriding = 0;
+    int day, hour, minute;
 
     PersistentEngine() {
         for (int i = 0; i < 7; i++) {
@@ -34,6 +39,11 @@ public class PersistentEngine implements Engine {
         }
         up = Integer.parseInt(sup);
         down = Integer.parseInt(sDown);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
         Log.i("Engine", "Created");
     }
 
@@ -110,8 +120,8 @@ public class PersistentEngine implements Engine {
     }
 
     @Override
-    public Date getDate() {
-        return new Date();
+    public Task getDate() {
+        return new Task(day, 2, hour, minute);
     }
 
     @Override
@@ -142,5 +152,56 @@ public class PersistentEngine implements Engine {
             }
         }
         return newTask;
+    }
+
+    @Override
+    public void pulse(int pday, int phour, int pminute) {
+        Log.i("Engine", "Pulse " + pday + " " + phour + " " + pminute);
+        hour = phour;
+        day = pday;
+        minute = pminute;
+        operate();
+        if (observer != null) {
+            observer.update();
+        }
+    }
+
+    private void operate() {
+        mode = (mode + 1) * 11;
+        if (hour == 0 && minute == 0) {
+            mode = 1;
+        }
+        List<Task> lllst = tasksByDay.get(day);
+        for (Task task : lllst) {
+            if (task.getHours() == hour & task.getMinutes() == minute) {
+                mode = task.getMode();
+            }
+        }
+        if (mode < 10) {
+            if (overriding == 1) {
+                overriding = 0;
+            }
+            scheduleTemp = temperatures[1 + mode];
+            if (overriding == 0) {
+                temperatures[0] = scheduleTemp;
+            }
+        } else {
+            if (mode == 22) {
+                mode = 1;
+            } else if (mode == 11) {
+                mode = 0;
+            }
+        }
+
+    }
+
+    @Override
+    public void setObserver(ThermostatFragment obs) {
+        observer = obs;
+    }
+
+    @Override
+    public void delObserver() {
+        observer = null;
     }
 }

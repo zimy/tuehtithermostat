@@ -11,17 +11,17 @@ import android.widget.ArrayAdapter;
 
 import com.google.inject.Inject;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import ru.hse.pi273.emy.paul.app.R;
+import ru.hse.pi273.emy.paul.app.engine.Engine;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 import ru.hse.pi273.emy.paul.app.view.task.CreateTaskActivity;
 
 @ContentView(R.layout.activity_week_view)
 public class WeekViewActivity extends RoboActionBarActivity implements ActionBar.OnNavigationListener, ActionMode.Callback {
+    @Inject
+    Engine engine;
     @Inject
     TaskStringKeeper stringKeeper;
     FragmentTransaction fTrans;
@@ -40,9 +40,7 @@ public class WeekViewActivity extends RoboActionBarActivity implements ActionBar
         bar.setListNavigationCallbacks(adapter, this);
         bar.setHomeButtonEnabled(true);
         bar.setDisplayHomeAsUpEnabled(true);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        getSupportActionBar().setSelectedNavigationItem(calendar.get(Calendar.DAY_OF_WEEK) - 1);
+        getSupportActionBar().setSelectedNavigationItem(engine.getDate().getDay());
     }
 
     @Override

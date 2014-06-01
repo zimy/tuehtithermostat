@@ -12,9 +12,6 @@ import android.widget.TimePicker;
 
 import com.google.inject.Inject;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectExtra;
@@ -28,13 +25,6 @@ import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
 
 @ContentView(R.layout.activity_create_task)
 public class CreateTaskActivity extends RoboActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, OnFragmentInteractionListener {
-    private static Calendar calendar;
-
-    static {
-        calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-    }
-
     @Inject
     Engine engine;
     @Inject
@@ -52,13 +42,13 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
     @InjectExtra("Action")
     String action;
     @InjectExtra(value = "Day", optional = true)
-    int iniDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+    int iniDay = -1;
     @InjectExtra(value = "Mode", optional = true)
     int mode = 2;
     @InjectExtra(value = "Hours", optional = true)
-    int iniHours = calendar.get(Calendar.HOUR_OF_DAY);
+    int iniHours = -1;
     @InjectExtra(value = "Minutes", optional = true)
-    int iniMinutes = calendar.get(Calendar.MINUTE);
+    int iniMinutes = -1;
     int Day, Hours, Minutes;
 
     void probe() {
@@ -165,6 +155,10 @@ public class CreateTaskActivity extends RoboActionBarActivity implements View.On
         bar.setHomeButtonEnabled(true);
         bar.setDisplayHomeAsUpEnabled(true);
         addingButton.setOnClickListener(this);
+        if (iniHours == -1) {
+            iniHours = engine.getDate().getHours();
+            iniMinutes = engine.getDate().getMinutes();
+        }
     }
 
     @Override

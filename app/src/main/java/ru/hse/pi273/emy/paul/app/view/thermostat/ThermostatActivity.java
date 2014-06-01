@@ -14,6 +14,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectResource;
 import ru.hse.pi273.emy.paul.app.R;
 import ru.hse.pi273.emy.paul.app.representation.TaskStringKeeper;
+import ru.hse.pi273.emy.paul.app.timer.MyTimer;
 import ru.hse.pi273.emy.paul.app.view.week.WeekViewActivity;
 
 @ContentView(R.layout.activity_main)
@@ -31,6 +32,7 @@ public class ThermostatActivity extends RoboActionBarActivity implements ActionB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startService(new Intent(this, MyTimer.class));
         ActionBar bar = getSupportActionBar();
         assert bar != null;
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -47,6 +49,11 @@ public class ThermostatActivity extends RoboActionBarActivity implements ActionB
         bar.addTab(tab);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, MyTimer.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -2,10 +2,10 @@ package ru.hse.pi273.emy.paul.app.engine;
 
 import com.google.inject.ImplementedBy;
 
-import java.util.Date;
 import java.util.List;
 
 import ru.hse.pi273.emy.paul.app.representation.Task;
+import ru.hse.pi273.emy.paul.app.view.thermostat.ThermostatFragment;
 
 /**
  * Higher School of Economics
@@ -25,11 +25,17 @@ public interface Engine {
 
     public void setTemperature(int tab, int temperature);
 
-    public Date getDate();
+    public Task getDate();
 
     public int getMode();
 
     public void setOverriding(int overrideMode);
 
     public Task remove(int day, int hours, int minutes);
+
+    public void pulse(int day, int hour, int minute);
+
+    public void setObserver(ThermostatFragment obs);
+
+    public void delObserver();
 }
