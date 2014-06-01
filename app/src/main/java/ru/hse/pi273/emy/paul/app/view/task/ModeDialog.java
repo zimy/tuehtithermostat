@@ -42,7 +42,7 @@ public class ModeDialog extends RoboDialogFragment implements DialogInterface.On
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
         adb.setTitle(R.string.mode_dialog_title);
         adb.setSingleChoiceItems(taskStrings.getModes(), mode, this);
-        adb.setPositiveButton(R.string.button_chose, this);
+        adb.setPositiveButton(R.string.button_choose, this);
         return adb.create();
     }
 

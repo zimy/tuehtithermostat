@@ -15,9 +15,9 @@
     <string name="day_thursday">Thursday</string>
     <string name="day_friday">Friday</string>
     <string name="day_saturday">Saturday</string>
-    <string name="day_dialog_title">Tap to chose day</string>
-    <string name="mode_dialog_title">Tap to chose mode</string>
-    <string name="mode_notSet">Tap here to chose mode</string>
+    <string name="day_dialog_title">Tap to choose day</string>
+    <string name="mode_dialog_title">Tap to choose mode</string>
+    <string name="mode_notSet">Tap here to choose mode</string>
     <string name="mode_day">Day</string>
     <string name="mode_night">Night</string>
     <string name="screen_home">Home</string>
@@ -30,8 +30,8 @@
     <string name="button_add">Add</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
-    <string name="button_chose">Chose</string>
-    <string name="mode_not_selected_error">Mode not selected. Chose one to be able to add task to schedule</string>
+    <string name="button_choose">Choose</string>
+    <string name="mode_not_selected_error">Mode not selected. Choose one to be able to add task to schedule</string>
     <string name="limits_ok">Now you can add task</string>
     <string name="lim_d_today">Daily limit of switches to DAY mode hit. Select another day or NIGHT mode</string>
     <string name="lim_n_today">Daily limit of switches to NIGHT mode hit. Select another day or DAY mode</string>

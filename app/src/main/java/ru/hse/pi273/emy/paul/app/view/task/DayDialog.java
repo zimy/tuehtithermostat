@@ -42,7 +42,7 @@ public class DayDialog extends RoboDialogFragment implements DialogInterface.OnC
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
         adb.setTitle(R.string.day_dialog_title);
         adb.setSingleChoiceItems(taskStrings.getDays(), Day, this);
-        adb.setPositiveButton(R.string.button_chose, this);
+        adb.setPositiveButton(R.string.button_choose, this);
         return adb.create();
     }
 
